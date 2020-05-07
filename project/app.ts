@@ -22,62 +22,71 @@ interface postion {
 class snake extends canvascomponent {
     bodypostion: postion[] = new Array(3)
     foodarr: postion[] = new Array()
-    restfood: number = 0
     canvaswidth: number
     canvasheight: number
+    defailtDr: number
     constructor(elementName: string) {
         super(elementName)
-        this.canvasheight = parseInt(this.mycanvas.style.height)
-        this.canvaswidth = parseInt(this.mycanvas.style.width)
-        this.init()
-        this.bodypostion = [{ x: 2, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 0 }]
-        this.restfood = 5
+        this.canvasheight = this.mycanvas.clientHeight
+        this.canvaswidth = this.mycanvas.clientWidth
+        this.bodypostion = [{ x: 6, y: 1 }, { x: 5, y: 1 }, { x: 4, y: 1 }, { x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }]
+        this.defailtDr = 0
         this.createConstfood()
+        this.init()
+        this.rendersnake = this.rendersnake.bind(this)
+        this.rendersnake()
+        // this.defailtmove = this.defailtmove.bind(this)
+        // this.defailtmove()
+    }
+    Func = (e: KeyboardEvent) => {
+        let head: postion = this.bodypostion[0]
+        let newHead: postion
+        switch (e.keyCode) {
+            case 37:
+            case 65:
+                newHead = {
+                    x: head.x - 1,
+                    y: head.y
+                }
+                this.defailtDr = 65
+                this.movesnake(newHead)
+                //left
+                break;
+            case 38:
+            case 87:
+                newHead = {
+                    x: head.x,
+                    y: head.y - 1
+                }
+                this.defailtDr = 87
+                this.movesnake(newHead)
+                //up
+                break;
+            case 39:
+            case 68:
+                newHead = {
+                    x: head.x + 1,
+                    y: head.y
+                }
+                this.defailtDr = 68
+                this.movesnake(newHead)
+                //right
+                break;
+            case 40:
+            case 83:
+                newHead = {
+                    x: head.x,
+                    y: head.y + 1
+                }
+                this.defailtDr = 83
+                this.movesnake(newHead)
+                //down
+                break;
+        }
+        this.rendersnake()
     }
     init(): void {
-        document.addEventListener("keydown", (event) => {
-            let head: postion = this.bodypostion[0]
-            let newHead: postion
-            switch (event.keyCode) {
-                case 37:
-                case 65:
-                    newHead = {
-                        x: head.x - 1,
-                        y: head.y
-                    }
-                    this.movesnake(newHead)
-                    //left
-                    break;
-                case 38:
-                case 87:
-                    newHead = {
-                        x: head.x,
-                        y: head.y + 1
-                    }
-                    this.movesnake(newHead)
-                    //up
-                    break;
-                case 39:
-                case 68:
-                    newHead = {
-                        x: head.x + 1,
-                        y: head.y
-                    }
-                    this.movesnake(newHead)
-                    //right
-                    break;
-                case 40:
-                case 83:
-                    newHead = {
-                        x: head.x,
-                        y: head.y - 1
-                    }
-                    this.movesnake(newHead)
-                    //down
-                    break;
-            }
-        })
-        window.requestAnimationFrame(this.rendersnake)
+        document.addEventListener("keydown", this.Func)
     }
     gotScore(): number {
         return this.bodypostion.length - 3
@@ -114,6 +123,7 @@ class snake extends canvascomponent {
             this.createConstfood()
             this.growsnake()
         }
+        this.gotScore()
     }
     growsnake(): void {
         let snaketailOne: postion = this.bodypostion[this.bodypostion.length]
@@ -146,25 +156,89 @@ class snake extends canvascomponent {
         }
         this.bodypostion.push(NewTail)
     }
+    defailtmove = (): void => {
+        let head: postion = this.bodypostion[0]
+        let newHead: postion
+        let temparr: postion[]
+        switch (this.defailtDr) {
+            case 37:
+            case 65:
+                temparr = this.bodypostion.map(data => {
+                    return {
+                        x: data.x - 1 / 60,
+                        y: data.y
+                    }
+                })
+                this.bodypostion = temparr
+                //left
+                break;
+            case 38:
+            case 87:
+                temparr = this.bodypostion.map(data => {
+                    return {
+                        x: data.x,
+                        y: data.y - 1 / 60
+                    }
+                })
+                this.bodypostion = temparr
+                //up
+                break;
+            case 39:
+            case 68:
+                temparr = this.bodypostion.map(data => {
+                    return {
+                        x: data.x + 1 / 60,
+                        y: data.y
+                    }
+                })
+                this.bodypostion = temparr
+                //right
+                break;
+            case 40:
+            case 83:
+                temparr = this.bodypostion.map(data => {
+                    return {
+                        x: data.x,
+                        y: data.y + 1 / 60
+                    }
+                })
+                this.bodypostion = temparr
+                //down
+                break;
+            default:
+                temparr = this.bodypostion.map(data => {
+                    return {
+                        x: data.x + 1 / 60,
+                        y: data.y
+                    }
+                })
+                this.bodypostion = temparr
+                //right
+                break;
+        }
+        this.rendersnake()
+        // setInterval(this.defailtmove, 500)
+        window.requestAnimationFrame(this.defailtmove)
+    }
     movesnake(newhaed: postion): void {
         this.bodypostion.unshift(newhaed)
         this.bodypostion.pop()
-        console.log(this.bodypostion)
     }
-    rendersnake(): void {
+    rendersnake = (): void => {
         this.context.clearRect(0, 0, this.canvaswidth, this.canvasheight)
         this.context.beginPath()
-        this.context.lineWidth = 0
+        // this.context.lineWidth = 1
         this.context.fillStyle = "#000"
-        this.context.strokeStyle="#000"
-        this.bodypostion.map((data,index)=>{
-            if(index===0){
-                this.context.strokeRect(5*data.x-5,5*data.y-5,5,5)
-            }else{
-                this.context.strokeRect(5*data.x-4.5,5*data.y-4.5,4,4)
+        // this.context.strokeStyle = "#000"
+        this.bodypostion.map((data, index) => {
+            if (index === 0) {
+                this.context.fillRect(5 * data.x - 5, 5 * data.y - 5, 5, 5)
+            } else {
+                this.context.fillRect(5 * data.x - 4.5, 5 * data.y - 4.5, 4, 4)
             }
         })
         this.context.stroke()
+        // window.requestAnimationFrame(this.rendersnake)
     }
 }
 let truesnake = new snake("#mycanvas")
