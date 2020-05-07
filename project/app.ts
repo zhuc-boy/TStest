@@ -30,7 +30,7 @@ class snake extends canvascomponent {
         this.canvasheight = parseInt(this.mycanvas.style.height)
         this.canvaswidth = parseInt(this.mycanvas.style.width)
         this.init()
-        this.bodypostion = [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }]
+        this.bodypostion = [{ x: 2, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 0 }]
         this.restfood = 5
         this.createConstfood()
     }
@@ -77,6 +77,7 @@ class snake extends canvascomponent {
                     break;
             }
         })
+        window.requestAnimationFrame(this.rendersnake)
     }
     gotScore(): number {
         return this.bodypostion.length - 3
@@ -111,6 +112,7 @@ class snake extends canvascomponent {
         if (indexflag >= 0) {
             this.foodarr.splice(indexflag, 1)
             this.createConstfood()
+            this.growsnake()
         }
     }
     growsnake(): void {
@@ -151,6 +153,18 @@ class snake extends canvascomponent {
     }
     rendersnake(): void {
         this.context.clearRect(0, 0, this.canvaswidth, this.canvasheight)
+        this.context.beginPath()
+        this.context.lineWidth = 0
+        this.context.fillStyle = "#000"
+        this.context.strokeStyle="#000"
+        this.bodypostion.map((data,index)=>{
+            if(index===0){
+                this.context.strokeRect(5*data.x-5,5*data.y-5,5,5)
+            }else{
+                this.context.strokeRect(5*data.x-4.5,5*data.y-4.5,4,4)
+            }
+        })
+        this.context.stroke()
     }
 }
 let truesnake = new snake("#mycanvas")
