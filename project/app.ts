@@ -233,7 +233,6 @@ class snake extends canvascomponent {
         this.context.beginPath()
         this.context.fillStyle = "red"
         this.context.fillRect(5 * this.foodarr[0].x - 5, 5 * this.foodarr[0].y - 5, 5, 5)
-        this.context.save()
         this.context.fillStyle = "#000"
         this.bodypostion.map((data, index) => {
             if (index === 0) {
@@ -242,7 +241,6 @@ class snake extends canvascomponent {
                 this.context.fillRect(5 * data.x - 4.5, 5 * data.y - 4.5, 4, 4)
             }
         })
-        this.context.restore()
         this.context.stroke()
     }
 }
