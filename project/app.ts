@@ -212,8 +212,7 @@ class snake extends canvascomponent {
                 //right
                 break;
         }
-        this.bodypostion.unshift(newHead)
-        this.bodypostion.pop()
+        this.movesnake(newHead)
         this.rendersnake()
         clearTimeout(<any>this.defailtmove)
         if (this.touchself()) {
