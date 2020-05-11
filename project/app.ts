@@ -224,7 +224,6 @@ class snake extends canvascomponent {
         }else{
             setTimeout(this.defailtmove, 100)
         }
-        setTimeout(this.defailtmove, 100)
         // setInterval(this.defailtmove, 500)//500毫秒执行一次
         // window.requestAnimationFrame(this.defailtmove)
     }
