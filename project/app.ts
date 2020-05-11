@@ -219,6 +219,11 @@ class snake extends canvascomponent {
             alert('游戏失败')
             return
         }
+        if(this.gotScore()<10){
+            setTimeout(this.defailtmove, 400-this.gotScore()*30)
+        }else{
+            setTimeout(this.defailtmove, 100)
+        }
         setTimeout(this.defailtmove, 100)
         // setInterval(this.defailtmove, 500)//500毫秒执行一次
         // window.requestAnimationFrame(this.defailtmove)
