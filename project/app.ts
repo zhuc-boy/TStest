@@ -1,3 +1,4 @@
+
 interface canvasSize {
     height: number
     width: number
@@ -35,12 +36,12 @@ class snake extends canvascomponent {
         this.timeout = 500
         this.createConstfood()
         this.init()
-        this.rendersnake = this.rendersnake.bind(this)
+        // this.rendersnake = this.rendersnake.bind(this)
         this.rendersnake()
-        this.defailtmove = this.defailtmove.bind(this)
+        // this.defailtmove = this.defailtmove.bind(this)
         this.defailtmove()
     }
-    Func = (e: KeyboardEvent) => {
+    Func(e: KeyboardEvent) {
         this.eat()
         let head: postion = this.bodypostion[0]
         let newHead: postion
@@ -89,10 +90,11 @@ class snake extends canvascomponent {
         this.rendersnake()
         if (this.touchself()) {
             alert('游戏失败')
+            this.restart()
         }
     }
     init(): void {
-        document.addEventListener("keydown", this.Func)
+        document.addEventListener("keydown", this.Func.bind(this))
     }
     gotScore(): number {
         return this.bodypostion.length - 3
@@ -164,7 +166,7 @@ class snake extends canvascomponent {
         }
         this.bodypostion.push(NewTail)
     }
-    defailtmove = (): void => {
+    defailtmove() {
         this.eat()
         let head: postion = this.bodypostion[0]
         let newHead: postion = {
@@ -214,15 +216,15 @@ class snake extends canvascomponent {
         }
         this.movesnake(newHead)
         this.rendersnake()
-        clearTimeout(<any>this.defailtmove)
+        clearTimeout(<any>this.defailtmove.bind(this))
         if (this.touchself()) {
             alert('游戏失败')
-            return
+            this.restart()
         }
-        if(this.gotScore()<10){
-            setTimeout(this.defailtmove, 400-this.gotScore()*30)
-        }else{
-            setTimeout(this.defailtmove, 100)
+        if (this.gotScore() < 10) {
+            setTimeout(this.defailtmove.bind(this), this.timeout - this.gotScore() * 40)
+        } else {
+            setTimeout(this.defailtmove.bind(this), 100)
         }
         // setInterval(this.defailtmove, 500)//500毫秒执行一次
         // window.requestAnimationFrame(this.defailtmove)
@@ -231,7 +233,7 @@ class snake extends canvascomponent {
         this.bodypostion.unshift(newhaed)
         this.bodypostion.pop()
     }
-    rendersnake = (): void => {
+    rendersnake(): void {
         this.context.clearRect(0, 0, this.canvaswidth, this.canvasheight)
         this.context.beginPath()
         this.context.fillStyle = "red"
@@ -246,5 +248,14 @@ class snake extends canvascomponent {
         })
         this.context.stroke()
     }
+    restart(): void {
+        this.bodypostion = [{ x: 6, y: 1 }, { x: 5, y: 1 }, { x: 4, y: 1 }, { x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }]
+        this.defailtDr = 0
+        this.timeout = 500
+        this.defailtmove()
+    }
 }
-let truesnake = new snake("#mycanvas")
+window.onload = function () {
+    let truesnake = new snake("#mycanvas")
+}
+
